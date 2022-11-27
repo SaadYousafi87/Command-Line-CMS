@@ -1,0 +1,24 @@
+{
+  "name": "command-line-cms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaadYousafi87/Command-Line-CMS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SaadYousafi87/Command-Line-CMS/issues"
+  },
+  "homepage": "https://github.com/SaadYousafi87/Command-Line-CMS#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}
