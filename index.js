@@ -62,22 +62,18 @@ function menu(){
                 break;
 
             case 'Add department':
-                console.log('Add a department function called');
                 addDepartment();
                 break;
 
             case 'Add role':
-                console.log('Add a role function called');
                 addRole();
                 break;
 
             case 'Add employee':
-                console.log('Add an employee function called');
                 addEmployee();
                 break;
 
             case 'Update employee role':
-                console.log('Update an employee role function called');
                 updateEmployeeRole();
                 break;
         }
@@ -108,6 +104,7 @@ function addDepartment(){
                     console.log(err);
                 }
                 menu();
+
             }
         );
     });
@@ -145,26 +142,26 @@ function addRole(){
         }
     ])
     .then(answers => {
-        var department_id;
-        connection.query(`select id from department where name=?`, answers.option, function(err, result){
-            if(err){
-                console.log(err);
+        var departId;
+        for(var i=0; i<optionArr.length; i++){
+            if(optionArr[i] === answers.option){
+                departId = i+1;
             }
-            department_id = result[0].id;
-        });
+        }
 
-        connection.query(`insert into roles set ?`,
+
+        connection.query(`INSERT INTO roles SET ?`,
         [
             {
                 title: answers.role,
                 salary: answers.salary,
-                department_id: department_id
+                department_id: departId,
             }
         ], function(err, result){
             if(err){
                 console.log(err);
             }
-            console.log(department_id);
+            console.log(result);
             menu();
         });
     });
@@ -220,18 +217,18 @@ function addEmployee(){
     .then(answers => {
         var role_id;
         var manager_id;
-        connection.query(`select id from roles where title=?`, answers.role, function(err, result){
-            if(err){
-                console.log(err);
+        
+        for(var i=0; i<roleArray.length; i++){
+            if(roleArray[i] === answers.role){
+                role_id = i+1;
             }
-            role_id = result[0].id;
-        });
-        connection.query(`select id from employee where first_name=?`, answers.manager, function(err, result){
-            if(err){
-                console.log(err);
+        }
+
+        for(var i=0; i<managerArray.length; i++){
+            if(managerArray[i] === answers.role){
+                manager_id = i+1;
             }
-            manager_id = result[0].id;
-        });
+        }
         
         connection.query(`insert into employee set ?`,
         [
@@ -255,21 +252,22 @@ function addEmployee(){
 function updateEmployeeRole(){
     var employeeArray = [];
     var roleArray = [];
-    connection.query(`select first_name from employee`, function(err, result){
+
+    connection.query(`select first_name from employee`, async function(err, result){
         if(err){
             console.log(err);
         }
-        for(var i=0; i < result.length; i++){
-            employeeArray.push(result[i].first_name);
+         for(var i=0; i < result.length; i++){
+             employeeArray.push(await result[i].first_name);
         }
     });
 
-    connection.query(`select title from roles`, function(err, result){
+    connection.query(`select title from roles`, async function(err, result){
         if(err){
             console.log(err);
         }
         for(var i=0; i < result.length; i++){
-            roleArray.push(result[i].first_name);
+            roleArray.push(await result[i].title);
         }
     });
 
@@ -289,14 +287,20 @@ function updateEmployeeRole(){
     ])
     .then(answers => {
         var role_id;
-        connection.query(`select id from roles where title=?`, answers.role, function(err, result){
+
+        for(var i=0; i<roleArray.length; i++){
+            if(roleArray[i] === answers.role){
+                role_id = i+1;
+            }
+        }
+
+        connection.query(`update employee set role_id=? where name=?`, [role_id, answers.employee], function(err, result){
             if(err){
                 console.log(err);
             }
-            role_id = result[0].id;
+            console.log('updated');
+            menu();
         });
-
-        menu();
     });
 }
 
